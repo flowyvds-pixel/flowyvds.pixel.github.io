@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowyVDS - Video Editing Agency</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Colors (Increased Contrast for Vibrancy) */
+        :root {
+            --color-dark-bg: #101010; /* Deeper black for more contrast */
+            --color-card-bg: #1F1F1F; /* Dark grey for card base */
+            --color-text-light: #F8F8F8; /* Brighter white text */
+            --color-text-grey: #B0B0B0; /* Subdued text */
+            
+            /* ACCENT Colors (Teal/Mauve remain for card/text accents) */
+            --color-teal-main: #00FFD1; /* Neon Teal */
+            --color-teal-dark: #00C7A9; /* Darker Teal */
+            --color-mauve-main: #D87BFF; /* Bright Neon Mauve/Purple */
+            --color-mauve-dark: #A55EDF; /* Darker Mauve */
+            
+            /* OLIVE GREEN Button Colors for Readability (Requested) */
+            --color-olive-main: #8BBE30; /* Vibrant Olive Green */
+            --color-olive-dark: #74A02A; /* Darker Olive for Hover */
+            
+            --color-border-accent: #3A3A3A; /* Subtle border for cards */
+
+            /* CTA Colors for high contrast and glow */
+            --color-orange-cta: #FFB300; /* Brighter, almost gold orange */
+            --color-orange-cta-dark: #CC8F00; /* Darker Orange for Hover */
+            --color-red-glow: #FF6B6B; /* Increased Red Glow */
+        }
+
+        body {
+            background-color: var(--color-dark-bg);
+            color: var(--color-text-light);
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            
+            /* Subtle background radial gradient for depth */
+            background-image: radial-gradient(circle at center, #252525 1px, transparent 0);
+            background-size: 80px 80px;
+            background-blend-mode: soft-light;
+        }
+
+        /* Utility classes for custom colors */
+        .bg-dark-bg { background-color: var(--color-dark-bg); }
+        .bg-card-bg { background-color: var(--color-card-bg); }
+        /* Teal Accents */
+        .text-teal-main { color: var(--color-teal-main); }
+        .border-teal-main { border-color: var(--color-teal-main); }
+        /* Mauve Accents */
+        .text-mauve-main { color: var(--color-mauve-main); }
+        .bg-mauve-main { background-color: var(--color-mauve-main); }
+        .hover\:bg-mauve-dark:hover { background-color: var(--color-mauve-dark); }
+        .border-mauve-main { border-color: var(--color-mauve-main); }
+        /* Olive Button Colors */
+        .bg-olive-main { background-color: var(--color-olive-main); }
+        .hover\:bg-olive-dark:hover { background-color: var(--color-olive-dark); }
+        /* CTA Orange */
+        .bg-orange-cta { background-color: var(--color-orange-cta); }
+        .hover\:bg-orange-cta-dark:hover { background-color: var(--color-orange-cta-dark); }
+        
+        /* New: Button Glow for CTA (Making them pop) */
+        .cta-glow {
+            box-shadow: 0 0 15px var(--color-orange-cta);
+        }
+        .cta-glow:hover {
+             box-shadow: 0 0 25px var(--color-orange-cta), 0 0 40px rgba(255, 179, 0, 0.5);
+        }
+        
+        /* New: Olive Button Glow Utility */
+        .shadow-olive-main\/50 {
+            box-shadow: 0 4px 6px -1px rgba(139, 190, 48, 0.25), 0 2px 4px -2px rgba(139, 190, 48, 0.25);
+            /* Also setting specific glow for olive */
+            filter: drop-shadow(0 0 8px rgba(139, 190, 48, 0.6));
+        }
+
+
+        /* Custom styles for the 9:16 aspect ratio video embed (Vertical Short) */
+        .video-container {
+            position: relative;
+            width: 100%;
+            /* 9:16 aspect ratio (16 / 9 * 100% = 177.77%) */
+            padding-top: 177.77%; 
+            max-width: 320px; /* Max width constraint for vertical video */
+            margin: 0 auto;
+            background-color: #000;
+            border-radius: 0.75rem; 
+            overflow: hidden;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Hero Background Overlay for image effect */
+        .hero-bg-overlay {
+            background: linear-gradient(135deg, rgba(16,16,16,0.98) 0%, rgba(31,31,31,0.88) 50%, rgba(16,16,16,0.98) 100%);
+        }
+
+        /* Custom animation for the hero visual (Teal/Mauve glow remains) */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px var(--color-teal-main), 0 0 30px var(--color-mauve-main);
+            }
+            50% {
+                box-shadow: 0 0 30px var(--color-teal-main), 0 0 60px var(--color-mauve-main);
+            }
+        }
+        .animated-visual {
+            animation: pulse-glow 3s infinite alternate ease-in-out;
+            background: radial-gradient(circle, rgba(0,255,209,0.1) 0%, rgba(216, 123, 255, 0.1) 100%);
+        }
+
+        /* ---------------------------------------------------------------------- */
+        /* Card styles (Teal/Mauve accents remain) */
+        .service-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-width: 1px; 
+            border-color: var(--color-border-accent);
+            border-radius: 0.75rem; 
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            opacity: 0.15; 
+            pointer-events: none;
+            z-index: 0;
+            transition: opacity 0.4s ease, background 0.4s ease; 
+        }
+
+        .service-card:hover::before {
+            opacity: 0.08; 
+            background: radial-gradient(circle, var(--color-red-glow) 0%, transparent 70%); 
+        }
+
+        .service-card.teal-accent::before {
+            background: radial-gradient(circle, var(--color-teal-main) 0%, transparent 70%);
+        }
+        .service-card.teal-accent:hover {
+            border-color: var(--color-teal-main);
+            box-shadow: 0 0 20px rgba(0, 255, 209, 0.4), inset 0 0 8px rgba(0, 0, 0, 0.5); 
+        }
+
+        .service-card.mauve-accent::before {
+            background: radial-gradient(circle, var(--color-mauve-main) 0%, transparent 70%);
+        }
+        .service-card.mauve-accent:hover {
+            border-color: var(--color-mauve-main);
+            box-shadow: 0 0 20px rgba(216, 123, 255, 0.4), inset 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .service-card > div {
+            position: relative;
+            z-index: 10;
+        }
+        /* ---------------------------------------------------------------------- */
+
+
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-dark-bg text-text-light antialiased">
+
+    
+<!-- HEADER SECTION --><header class="bg-dark-bg sticky top-0 z-20 border-b border-accent py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
+        <!-- LOGO --><h1 class="text-2xl font-bold text-white">FLOWY<span class="text-teal-main">V</span>DS</h1>
+        <div class="flex items-center space-x-4 sm:space-x-6 text-xs sm:text-sm">
+            <span class="hidden sm:inline text-text-grey">Video Editing Agency</span>
+            <!-- Showreel button: Uses OLIVE GREEN and text-dark-bg --><button id="showreel-btn" class="px-3 py-1.5 sm:px-5 sm:py-2 bg-olive-main text-dark-bg font-semibold rounded-full hover:bg-olive-dark transition duration-300 text-sm shadow-lg shadow-olive-main/50">
+                Showreel
+            </button>
+        </div>
+    </div>
+</header>
+
+    
+<!-- HERO SECTION --><section class="relative min-h-[500px] lg:min-h-[600px] flex flex-col items-center justify-center p-6 sm:p-8 overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1542435503-9142f1f621ae?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+            alt="Abstract video studio background" 
+            class="absolute inset-0 w-full h-full object-cover mix-blend-luminosity opacity-20" loading="eager">
+    <div class="absolute inset-0 hero-bg-overlay"></div>
+    
+    <!-- WHERE VISION MEETS VELOCITY LINE (Teal remains) --><div class="relative z-10 pt-4 pb-0 text-center w-full">
+        <p class="text-lg sm:text-xl font-extrabold uppercase tracking-widest text-teal-main drop-shadow-[0_0_5px_rgba(0,255,209,0.5)]">
+            WHERE VISION MEETS VELOCITY
+        </p>
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between text-center lg:text-left gap-10 py-12 lg:py-16">
+        <div class="lg:w-1/2 space-y-4 sm:space-y-6">
+            <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+                Transforming concepts into captivating visual narratives.
+            </h2>
+            <!-- Updated text with red glow --><p class="text-lg sm:text-xl lg:text-2xl text-text-grey leading-relaxed max-w-md mx-auto lg:mx-0 drop-shadow-[0_0_5px_rgba(255,107,107,0.3)]">
+                Allow FLOWYVDS a chance to give your video, the edit it deserves.
+            </p>
+            <!-- "Let's Create Together" CTA: Uses OLIVE GREEN and text-dark-bg --><a href="#contact-section" class="inline-block px-6 py-3 sm:px-8 sm:py-3 bg-olive-main text-dark-bg text-base sm:text-lg font-semibold rounded-full shadow-lg hover:bg-olive-dark transition duration-300 transform hover:scale-105 shadow-olive-main/50">
+                Let's Create Together
+            </a>
+        </div>
+        
+        <!-- Animated Placeholder (Teal/Mauve remains) --><div class="lg:w-1/2 mt-8 lg:mt-0 flex justify-center lg:justify-end w-full">
+            <div class="w-48 h-48 sm:w-64 sm:h-64 bg-card-bg rounded-full flex items-center justify-center border-4 border-teal-main animated-visual p-8">
+                <!-- SVG Icon: Abstract Video/Focus --><svg class="w-full h-full text-mauve-main" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v.01" />
+                    <path d="M12 19v.01" />
+                    <path d="M5 12h.01" />
+                    <path d="M19 12h.01" />
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2v2M22 12h-2M12 22v-2M4 12H2M16.24 7.76l1.41-1.41M6.34 17.66l-1.41 1.41M17.66 17.66l-1.41 1.41M6.34 6.34l-1.41-1.41" />
+                    <circle cx="12" cy="12" r="5" fill="currentColor" opacity="0.1"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+<!-- SHOWREEL & FEATURED WORK SECTION (Updated for 3 Videos) --><section id="featured-projects" class="py-12 sm:py-16 bg-dark-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <!-- New H2 for Featured Work --><h2 class="text-2xl sm:text-3xl font-bold text-text-light mb-8 sm:mb-12 text-center drop-shadow-md">
+            Featured Video Work & Showreels
+        </h2>
+        
+        <!-- Three-column responsive video grid --><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            
+            <!-- Video Card 1: Vertical Showreel (Teal Accent - Primary) --><div class="bg-card-bg p-6 rounded-xl shadow-lg border relative overflow-hidden flex flex-col items-center text-center service-card teal-accent">
+                <div class="relative z-10 w-full">
+                    <h3 class="text-xl font-bold text-teal-main mb-4 drop-shadow-sm">Vertical Showreel (9:16)</h3>
+                    <div class="video-container shadow-2xl shadow-teal-main/50">
+                        <!-- IFRAME SRC for reliable playback --><iframe 
+                            src="https://www.youtube.com/embed/K2GKQUKSrMw?rel=0&autoplay=0&controls=1" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen 
+                            title="FlowyVDS Vertical Video Showreel">
+                        </iframe>
+                    </div>
+                    <!-- Button remains Mauve for accent contrast --><a href="https://youtu.be/K2GKQUKSrMw" target="_blank" class="mt-4 inline-block px-4 py-2 bg-mauve-main text-dark-bg font-semibold rounded-full hover:bg-mauve-dark transition duration-300 text-xs shadow-md shadow-mauve-main/50">
+                        Watch Full
+                    </a>
+                </div>
+            </div>
+
+            <!-- Video Card 2: Dynamic Motion Graphics Short (Mauve Accent) --><div class="bg-card-bg p-6 rounded-xl shadow-lg border relative overflow-hidden flex flex-col items-center text-center service-card mauve-accent">
+                <div class="relative z-10 w-full">
+                    <h3 class="text-xl font-bold text-mauve-main mb-4 drop-shadow-sm">Dynamic Motion Graphics Short</h3>
+                    <div class="video-container shadow-2xl shadow-mauve-main/50">
+                        <!-- IFRAME SRC --><iframe 
+                            src="https://www.youtube.com/embed/e2_m-wf6iC0?rel=0&autoplay=0&controls=1" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen 
+                            title="FlowyVDS Dynamic Motion Graphics Short">
+                        </iframe>
+                    </div>
+                    <!-- Button is Olive Green for different look --><a href="https://youtu.be/e2_m-wf6iC0" target="_blank" class="mt-4 inline-block px-4 py-2 bg-olive-main text-dark-bg font-semibold rounded-full hover:bg-olive-dark transition duration-300 text-xs shadow-md shadow-olive-main/50">
+                        View Project
+                    </a>
+                </div>
+            </div>
+            
+            <!-- NEW Video Card 3: Fast-Paced Product Reel (Teal Accent) --><div class="bg-card-bg p-6 rounded-xl shadow-lg border relative overflow-hidden flex flex-col items-center text-center service-card teal-accent">
+                <div class="relative z-10 w-full">
+                    <h3 class="text-xl font-bold text-teal-main mb-4 drop-shadow-sm">Fast-Paced Product Reel</h3>
+                    <div class="video-container shadow-2xl shadow-teal-main/50">
+                        <!-- NEW IFRAME SRC --><iframe 
+                            src="https://www.youtube.com/embed/fV6blcYXo4U?rel=0&autoplay=0&controls=1" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen 
+                            title="FlowyVDS Fast-Paced Product Reel">
+                        </iframe>
+                    </div>
+                    <!-- Button is Mauve for accent contrast --><a href="https://youtube.com/shorts/fV6blcYXo4U" target="_blank" class="mt-4 inline-block px-4 py-2 bg-mauve-main text-dark-bg font-semibold rounded-full hover:bg-mauve-dark transition duration-300 text-xs shadow-md shadow-mauve-main/50">
+                        Watch Clip
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- SIMPLIFIED H3: Our Specialized Services --><h3 class="text-xl sm:text-2xl font-bold text-text-light mb-6 sm:mb-8 text-center drop-shadow-md">
+            Our Specialized Services
+        </h3>
+        
+        <!-- SERVICES GRID (Teal/Mauve accents remain) --><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            
+            <!-- Service Card 1: Cinematic Commercials (Teal Accent) --><div class="group bg-card-bg p-6 rounded-xl relative overflow-hidden transform transition duration-300 hover:scale-[1.03] service-card teal-accent">
+                <div class="relative z-10 space-y-2">
+                    <h4 class="text-lg sm:text-xl font-bold text-teal-main flex items-center gap-2 drop-shadow-sm">
+                        <!-- SVG Icon: Film Reel --><svg class="w-5 h-5 text-teal-main" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h18M3 12h18M3 16h18M11 4h2v16h-2V4z"></path></svg>
+                        Cinematic Commercials Production
+                    </h4>
+                    <p class="text-text-grey text-xs sm:text-sm">Crafting high-impact, visually stunning commercials that elevate your brand and capture audience attention with a professional, filmic touch.</p>
+                </div>
+            </div>
+
+            <!-- Service Card 2: Brand Storytelling (Mauve Accent) --><div class="group bg-card-bg p-6 rounded-xl relative overflow-hidden transform transition duration-300 hover:scale-[1.03] service-card mauve-accent">
+                <div class="relative z-10 space-y-2">
+                    <h4 class="text-lg sm:text-xl font-bold text-mauve-main flex items-center gap-2 drop-shadow-sm">
+                        <!-- SVG Icon: Globe/Compass --><svg class="w-5 h-5 text-mauve-main" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9l-10.327 2.193a1 1 0 01-1.168-1.54l.035-.046L21 12zM12 3a9 9 0 00-9 9m9-9a9 9 0 019 9m-9-9v9"></path></svg>
+                        Captivating Brand Video Storytelling
+                    </h4>
+                    <p class="text-text-grey text-xs sm:text-sm">We tell your brand's unique story through emotional and engaging videos that resonate deeply with your target audience and build lasting connections.</p>
+                </div>
+            </div>
+
+            <!-- Service Card 3: Social Media Content (Teal Accent) --><div class="group bg-card-bg p-6 rounded-xl relative overflow-hidden transform transition duration-300 hover:scale-[1.03] service-card teal-accent">
+                <div class="relative z-10 space-y-2">
+                    <h4 class="text-lg sm:text-xl font-bold text-teal-main flex items-center gap-2 drop-shadow-sm">
+                        <!-- SVG Icon: Lightning Bolt --><svg class="w-5 h-5 text-teal-main" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Dynamic Social Media Content
+                    </h4>
+                    <p class="text-text-grey text-xs sm:text-sm">From viral shorts to engaging reels, we produce content optimized for all social platforms, driving views, engagement, and conversions.</p>
+                </div>
+            </div>
+            
+            <!-- Service Card 4: Event & Graphics (Mauve Accent) --><div class="group bg-card-bg p-6 rounded-xl relative overflow-hidden transform transition duration-300 hover:scale-[1.03] service-card mauve-accent">
+                <div class="relative z-10 space-y-2">
+                    <h4 class="text-lg sm:text-xl font-bold text-mauve-main flex items-center gap-2 drop-shadow-sm">
+                        <!-- SVG Icon: Monitor Screen --><svg class="w-5 h-5 text-mauve-main" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1v-3.25m-7.5-3.5h7.5c.571 0 1.035-.464 1.035-1.035V7.035c0-.571-.464-1.035-1.035-1.035h-7.5c-.571 0-1.035.464-1.035 1.035v6.175c0 .571.464 1.035 1.035 1.035z"></path></svg>
+                        High-End Event & Graphics & Promo Videos
+                    </h4>
+                    <p class="text-text-grey text-xs sm:text-sm">Comprehensive coverage of your events with stunning visuals, impactful motion graphics, and engaging promotional videos that leave a lasting impression.</p>
+                </div>
+            </div>
+
+            <!-- Service Card 5: Explainer Videos (Teal Accent) --><div class="group bg-card-bg p-6 rounded-xl relative overflow-hidden transform transition duration-300 hover:scale-[1.03] service-card teal-accent">
+                <div class="relative z-10 space-y-2">
+                    <h4 class="text-lg sm:text-xl font-bold text-teal-main flex items-center gap-2 drop-shadow-sm">
+                        <!-- SVG Icon: Lightbulb/Idea --><svg class="w-5 h-5 text-teal-main" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1a9 9 0 1118 0l-1.5 5H4.5l-1.5-5z"></path></svg>
+                        Compelling Explainer Videos & Demos
+                    </h4>
+                    <p class="text-text-grey text-xs sm:text-sm">Simplify complex ideas into clear, engaging animated or live-action explainer videos and product demos that educate and convert viewers effectively.</p>
+                </div>
+            </div>
+
+            <!-- Service Card 6: Music Video & Artistic Productions (Mauve Accent) --><div class="group bg-card-bg p-6 rounded-xl relative overflow-hidden transform transition duration-300 hover:scale-[1.03] service-card mauve-accent">
+                <div class="relative z-10 space-y-2">
+                    <h4 class="text-lg sm:text-xl font-bold text-mauve-main flex items-center gap-2 drop-shadow-sm">
+                        <!-- SVG Icon: Speaker/Volume --><svg class="w-5 h-5 text-mauve-main" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a.5.5 0 00-.707 0L12 11.293 9.172 8.464a.5.5 0 00-.707.707l2.828 2.828-2.828 2.828a.5.5 0 00.707.707L12 13.707l2.828 2.828a.5.5 0 000-.707L12.707 13l2.828-2.828a.5.5 0 000-.707z"></path><circle cx="12" cy="12" r="9"></circle></svg>
+                        Music Video & Artistic Productions
+                    </h4>
+                    <p class="text-text-grey text-xs sm:text-sm">Unleash your artistic vision with professionally produced music videos and creative short films that visually amplify your message or sound.</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+    
+<!-- CTA SECTION --><section class="py-12 sm:py-16 bg-card-bg text-center rounded-xl shadow-lg my-12 sm:my-16 border border-accent mx-auto max-w-7xl px-4 sm:px-6">
+    <!-- CTA Orange remains --><h2 class="text-3xl sm:text-4xl font-bold text-orange-cta mb-4 sm:mb-6 drop-shadow-md">Ready to bring your vision to life?</h2>
+    <p class="text-base sm:text-xl text-text-grey max-w-3xl mx-auto mb-8 sm:mb-10">
+        Whether it's a compelling commercial, an engaging social media campaign, or a powerful corporate video, FlowyVDS is here to create stunning visuals that tell your unique story.
+    </p>
+    <!-- "Start Your Project" (Orange remains) --><a href="#contact-section" class="inline-block px-8 py-4 sm:px-10 sm:py-5 bg-orange-cta text-dark-bg text-lg sm:text-xl font-bold rounded-full shadow-lg hover:bg-orange-cta-dark transition duration-300 transform hover:scale-105 cta-glow">
+        Start Your Project
+    </a>
+</section>
+
+    
+<!-- CONTACT SECTION --><section id="contact-section" class="py-12 sm:py-16 bg-dark-bg">
+    <div class="max-w-xl mx-auto px-4 sm:px-6 text-center bg-card-bg p-6 sm:p-8 rounded-xl shadow-lg border border-accent">
+        <!-- Teal accent remains --><h2 class="text-3xl sm:text-4xl font-bold text-teal-main mb-6 sm:mb-8 drop-shadow-sm">Connect With Us</h2>
+        
+        <div class="space-y-4 sm:space-y-6 text-base sm:text-lg">
+            
+            <!-- Contact Line 1: Website - Responsive Alignment Fix --><div class="text-text-light flex flex-col sm:flex-row sm:items-center sm:justify-center gap-1 sm:gap-2">
+                <span class="font-semibold text-text-grey sm:min-w-[100px] sm:text-right block">Website:</span> 
+                <!-- Text is centered on mobile, left-aligned on desktop --><a href="http://flowyvds.odoo.com" target="_blank" class="text-mauve-main underline hover:text-mauve-dark transition break-all text-center sm:text-left">flowyvds.odoo.com</a>
+            </div>
+
+            
+            <!-- Contact Line 2: Instagram - Responsive Alignment Fix --><div class="text-text-light flex flex-col sm:flex-row sm:items-center sm:justify-center gap-1 sm:gap-2">
+                <span class="font-semibold text-text-grey sm:min-w-[100px] sm:text-right block">Instagram:</span> 
+                <!-- Text is centered on mobile, left-aligned on desktop --><a href="https://www.instagram.com/flowy_vds?igsh=MTY4ZXp0a2xlMmk3bA==" target="_blank" class="text-mauve-main underline hover:text-mauve-dark transition text-center sm:text-left">@flowy_vds</a>
+            </div>
+
+            
+            <!-- Contact Line 3: Email - Responsive Alignment Fix --><div class="text-text-light flex flex-col sm:flex-row sm:items-center sm:justify-center gap-1 sm:gap-2">
+                <span class="font-semibold text-text-grey sm:min-w-[100px] sm:text-right block">Email:</span> 
+                <!-- Text is centered on mobile, left-aligned on desktop --><a href="mailto:flowyvds@gmail.com" class="text-mauve-main underline hover:text-mauve-dark transition text-center sm:text-left">flowyvds@gmail.com</a>
+            </div>
+
+            
+            <div class="pt-6 mt-6 border-t border-accent">
+                <p class="text-text-light mb-3">
+                    <span class="font-semibold text-text-grey block">More Video Samples:</span> 
+                    Follow us on YouTube for our latest projects and insights! 
+                </p>
+                <!-- YouTube button (Red remains) --><a href="https://youtube.com/@flowyvds?si=QB7pR0r-pcSNKmw3" target="_blank" class="inline-block px-5 py-2 sm:px-6 sm:py-3 bg-red-600 text-white font-bold rounded-full shadow-lg hover:bg-red-500 transition transform hover:scale-105 text-sm sm:text-base shadow-red-600/50">
+                    <svg class="inline-block w-4 h-4 sm:w-5 sm:h-5 mr-2 -mt-1" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M19.615 3.184c-1.004-.376-2.071-.607-3.17-.655C15.011 2.3 12 2.3 12 2.3S8.989 2.3 7.555 2.529c-1.098.048-2.164.279-3.17.655C3.38 3.56 2.3 4.64 2.3 6.096c0 1.25.107 2.455.318 3.593.211 1.139.52 2.222.923 3.253.403 1.03.882 1.99 1.43 2.875.549.885 1.168 1.696 1.857 2.417.689.72 1.458 1.353 2.296 1.895.838.542-1.76-1.002-2.76-1.378Z"></path>
+                        <path d="M11.692 14.39L14.73 12 11.692 9.61V14.39Z" fill="#fff"></path>
+                    </svg>
+                    Subscribe on YouTube
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+<!-- FOOTER SECTION --><footer class="mt-8 sm:mt-16 py-6 sm:py-8 text-center text-xs sm:text-sm text-text-grey border-t border-accent bg-dark-bg">
+    &copy; 2025 FlowyVDS. All Rights Reserved. Crafted with passion.
+</footer>
+
+    
+<!-- JavaScript for smooth scrolling --><script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const showreelBtn = document.getElementById('showreel-btn');
+        const targetSection = document.getElementById('featured-projects');
+
+        showreelBtn.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>
